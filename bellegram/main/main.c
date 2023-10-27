@@ -20,14 +20,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
   } else if (ev == MG_EV_CONNECT) {
     // Connected to server, tell client connection to use TLS
     struct mg_str host = mg_url_host(s_url);
-    struct mg_tls_opts opts = {
-        .ca = "/ca.pem", .srvname = host, .fs = &mg_fs_packed};
+    struct mg_tls_opts opts = {.ca = mg_unpacked("/ca.pem"),
+                               .name = mg_url_host(s_url)};
     mg_tls_init(c, &opts);
 
     // Send request
-    char *buffer = mg_mprintf("{%m:%m,%m:%m,%m:%s}",
-                              MG_ESC("chat_id"), MG_ESC(CHAT_ID),
-                              MG_ESC("text"), MG_ESC(MESSAGE),
+    char *buffer = mg_mprintf("{%m:%m,%m:%m,%m:%s}", MG_ESC("chat_id"),
+                              MG_ESC(CHAT_ID), MG_ESC("text"), MG_ESC(MESSAGE),
                               MG_ESC("disable_notification"), "false");
     int content_length = strlen(buffer);
     mg_printf(c,
@@ -44,7 +43,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
     // Response, print it
     struct mg_http_message *hm = (struct mg_http_message *) ev_data;
     printf("%.*s\n", (int) hm->message.len, hm->message.ptr);
-    c->is_closing = 1;         // Tell mongoose to close this connection
+    c->is_draining = 1;        // Tell mongoose to close this connection
     *(bool *) fn_data = true;  // Re-enable further calls
   } else if (ev == MG_EV_ERROR) {
     *(bool *) fn_data = true;  // Error, enable further calls

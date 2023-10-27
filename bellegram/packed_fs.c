@@ -2,7 +2,20 @@
 #include <string.h>
 #include <time.h>
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+const char *mg_unlist(size_t no);
+const char *mg_unpack(const char *, size_t *, time_t *);
+#if defined(__cplusplus)
+}
+#endif
+
 static const unsigned char v1[] = {
+  45,  32,  77,  97, 107, 101,  32, 115, 117, 114, 101,  32, // - Make sure 
+ 121, 111, 117, 114,  32,  80,  69,  77,  32, 102, 105, 108, // your PEM fil
+ 101,  32, 115, 116,  97, 114, 116, 115,  32, 119, 105, 116, // e starts wit
+ 104,  32,  97,  32, 100,  97, 115, 104,  32,  45,  10,  10, // h a dash -..
   73, 115, 115, 117, 101, 114,  58,  32,  67,  32,  61,  32, // Issuer: C = 
   85,  83,  44,  32,  79,  32,  61,  32,  73, 110, 116, 101, // US, O = Inte
  114, 110, 101, 116,  32,  83, 101,  99, 117, 114, 105, 116, // rnet Securit
@@ -2543,7 +2556,7 @@ static const struct packed_file {
   size_t size;
   time_t mtime;
 } packed_files[] = {
-  {"/ca.pem", v1, sizeof(v1), 1686518144},
+  {"/ca.pem", v1, sizeof(v1), 1698070190},
   {NULL, NULL, 0, 0}
 };
 
@@ -2551,11 +2564,9 @@ static int scmp(const char *a, const char *b) {
   while (*a && (*a == *b)) a++, b++;
   return *(const unsigned char *) a - *(const unsigned char *) b;
 }
-const char *mg_unlist(size_t no);
 const char *mg_unlist(size_t no) {
   return packed_files[no].name;
 }
-const char *mg_unpack(const char *path, size_t *size, time_t *mtime);
 const char *mg_unpack(const char *name, size_t *size, time_t *mtime) {
   const struct packed_file *p;
   for (p = packed_files; p->name != NULL; p++) {

@@ -4,4 +4,4 @@ idf_component_register(SRCS "main.c"
                             "mongoose.c")
 component_compile_options(-DMG_ENABLE_LINES)
 component_compile_options(-DMG_ENABLE_PACKED_FS=1)
-component_compile_options(-DMG_ENABLE_MBEDTLS=1)
+component_compile_options(-DMG_TLS=MG_TLS_MBED)
