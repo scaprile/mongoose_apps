@@ -8,7 +8,7 @@ static const char *s_url = "https://api.telegram.org/" BOT_TOKEN "/sendMessage";
 #include "driver/gpio.h"
 #include "mongoose.h"
 
-static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
+static void fn(struct mg_connection *c, int ev, void *ev_data) {
   if (ev == MG_EV_OPEN) {
     // Connection created. Store connect expiration time in c->data
     *(uint64_t *) c->data = mg_millis() + 1000 /* ms */;
@@ -44,9 +44,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data, void *fn_data) {
     struct mg_http_message *hm = (struct mg_http_message *) ev_data;
     printf("%.*s\n", (int) hm->message.len, hm->message.ptr);
     c->is_draining = 1;        // Tell mongoose to close this connection
-    *(bool *) fn_data = true;  // Re-enable further calls
+    *(bool *) c->fn_data = true;  // Re-enable further calls
   } else if (ev == MG_EV_ERROR) {
-    *(bool *) fn_data = true;  // Error, enable further calls
+    *(bool *) c->fn_data = true;  // Error, enable further calls
   }
 }
 
