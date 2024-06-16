@@ -35,14 +35,14 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
               "Content-Type: application/json\r\n"
               "Content-Length: %d\r\n"
               "\r\n",
-              "POST", mg_url_uri(s_url), (int) host.len, host.ptr,
+              "POST", mg_url_uri(s_url), (int) host.len, host.buf,
               content_length);
     mg_send(c, buffer, content_length);
     free(buffer);
   } else if (ev == MG_EV_HTTP_MSG) {
     // Response, print it
     struct mg_http_message *hm = (struct mg_http_message *) ev_data;
-    printf("%.*s\n", (int) hm->message.len, hm->message.ptr);
+    printf("%.*s\n", (int) hm->message.len, hm->message.buf);
     c->is_draining = 1;        // Tell mongoose to close this connection
     *(bool *) c->fn_data = true;  // Re-enable further calls
   } else if (ev == MG_EV_ERROR) {
