@@ -100,7 +100,7 @@ STATIC mp_obj_t mongoose_mqttclient_connect(size_t nargs, const mp_obj_t *args)
     mgmp_mqttc_connect(&self->celf);
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mongoose_mqttclient_connect_obj, 4, 7, mongoose_mqttclient_connect);
+STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mongoose_mqttclient_connect_obj, 4, 8, mongoose_mqttclient_connect);
 
 STATIC mp_obj_t mongoose_mqttclient_pub(size_t nargs, const mp_obj_t *args)
 {
